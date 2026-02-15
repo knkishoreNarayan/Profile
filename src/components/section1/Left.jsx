@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react'
 import { useScrollAnimation } from '../../hooks/useScrollAnimation'
 
-const Left = () => {
+const left = () => {
   const [ref, isVisible] = useScrollAnimation()
   
   // Typewriter animation state
@@ -106,4 +106,4 @@ const Left = () => {
   )
 }
 
-export default Left
+export default left
