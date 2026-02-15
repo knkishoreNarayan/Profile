@@ -1,0 +1,12 @@
+services:
+  - type: web
+    name: kn-kishore-portfolio
+    env: docker
+    dockerfilePath: ./Dockerfile
+    plan: free
+    region: oregon
+    branch: main
+    healthCheckPath: /
+    envVars:
+      - key: NODE_ENV
+        value: production
