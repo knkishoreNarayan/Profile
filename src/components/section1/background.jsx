@@ -1,3 +1,4 @@
+// Animated futuristic background - Neural network particles, gradient orbs, data streams, and floating code
 import React, { useEffect, useRef } from "react"
 import { gsap } from "gsap"
 

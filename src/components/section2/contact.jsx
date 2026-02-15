@@ -1,3 +1,4 @@
+// Contact section - Form with FormSubmit integration for email submissions
 import React from "react"
 import { useScrollAnimation } from "../../hooks/useScrollAnimation"
 
@@ -30,7 +31,7 @@ const Contact = () => {
           </h3>
 
           <p className="text-gray-400 mb-10 leading-relaxed">
-            Feel free to get in touch with me. I’m always open to discussing 
+            Feel free to get in touch with me. I'm always open to discussing 
             new projects, creative ideas, or opportunities.
           </p>
 
@@ -49,7 +50,7 @@ const Contact = () => {
 
         </div>
 
-        {/* RIGHT SIDE FORM */}
+        {/* RIGHT SIDE FORM - Uses FormSubmit for backend-free email handling */}
         <div className="w-2/3">
 
           <form 

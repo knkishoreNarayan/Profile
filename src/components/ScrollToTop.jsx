@@ -1,8 +1,10 @@
+// Floating scroll-to-top button - Appears after scrolling down 300px
 import React, { useState, useEffect } from 'react'
 
 const ScrollToTop = () => {
   const [isVisible, setIsVisible] = useState(false)
 
+  // Show button when user scrolls down 300px
   useEffect(() => {
     const toggleVisibility = () => {
       if (window.scrollY > 300) {
@@ -17,6 +19,7 @@ const ScrollToTop = () => {
     return () => window.removeEventListener('scroll', toggleVisibility)
   }, [])
 
+  // Smooth scroll to top using Lenis
   const scrollToTop = () => {
     if (window.lenis) {
       window.lenis.scrollTo(0, {

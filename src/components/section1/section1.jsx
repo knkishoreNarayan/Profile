@@ -1,3 +1,4 @@
+// Hero section container - Combines animated background, intro text, and profile photo
 import React from 'react'
 import Left from './left'
 import Background from './background'

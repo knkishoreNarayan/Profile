@@ -1,6 +1,8 @@
+// Projects section - Grid display of portfolio projects with tech stack tags
 import React from "react"
 import { useScrollAnimation } from "../../hooks/useScrollAnimation"
 
+// Project data array
 const projectData = [
   {
     title: "Face Recognition & Intruder Detection System",
@@ -53,7 +55,7 @@ const Projects = () => {
         </h2>
       </div>
 
-      {/* Grid */}
+      {/* Project Grid */}
       <div className="grid grid-cols-3 gap-8">
 
         {projectData.map((project, index) => (
@@ -74,7 +76,7 @@ const Projects = () => {
                 {project.desc}
               </p>
 
-              {/* Tech Stack */}
+              {/* Tech Stack Tags */}
               <div className="flex flex-wrap gap-2 mb-6">
                 {project.tech.map((tech, i) => (
                   <span

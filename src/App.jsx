@@ -1,3 +1,4 @@
+// Main App component - Sets up Lenis smooth scroll and renders all sections
 import React, { useEffect, useRef } from 'react'
 import Section1 from './components/section1/section1'
 import Section2 from './components/section2/section'

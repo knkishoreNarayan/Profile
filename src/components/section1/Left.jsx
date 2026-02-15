@@ -1,8 +1,11 @@
+// Hero section left side - Intro text with typewriter animation and CTA buttons
 import React, { useState, useEffect } from 'react'
 import { useScrollAnimation } from '../../hooks/useScrollAnimation'
 
 const Left = () => {
   const [ref, isVisible] = useScrollAnimation()
+  
+  // Typewriter animation state
   const [displayedText, setDisplayedText] = useState('')
   const [isDeleting, setIsDeleting] = useState(false)
   const [loopNum, setLoopNum] = useState(0)
@@ -11,12 +14,13 @@ const Left = () => {
   const deletingSpeed = 100
   const pauseTime = 2000
 
+  // Typewriter effect - types and deletes name continuously
   useEffect(() => {
     const handleTyping = () => {
       const currentText = fullText
 
       if (!isDeleting) {
-        // Typing
+        // Typing phase
         if (displayedText.length < currentText.length) {
           setDisplayedText(currentText.slice(0, displayedText.length + 1))
         } else {
@@ -24,7 +28,7 @@ const Left = () => {
           setTimeout(() => setIsDeleting(true), pauseTime)
         }
       } else {
-        // Deleting
+        // Deleting phase
         if (displayedText.length > 0) {
           setDisplayedText(currentText.slice(0, displayedText.length - 1))
         } else {
@@ -42,6 +46,7 @@ const Left = () => {
     return () => clearTimeout(timer)
   }, [displayedText, isDeleting, loopNum])
 
+  // Smooth scroll to section using Lenis
   const scrollToSection = (sectionId) => {
     const element = document.getElementById(sectionId)
     if (element && window.lenis) {
@@ -67,6 +72,7 @@ const Left = () => {
         FULL STACK DEVELOPER
       </h3>
 
+      {/* Animated name with typewriter effect */}
       <h1 className="text-5xl font-bold text-white mb-6 leading-tight">
         Hi, I'm <span className="text-purple-500">{displayedText}</span>
         <span className="animate-pulse text-blue-500">|</span>
@@ -79,6 +85,7 @@ const Left = () => {
         real-world problems.
       </p>
 
+      {/* CTA buttons */}
       <div className="flex space-x-4">
         <button 
           onClick={() => scrollToSection('work')}

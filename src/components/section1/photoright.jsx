@@ -1,3 +1,4 @@
+// Hero section profile photo - Circular image with glow effect and fade-in animation
 import React from "react"
 import profile from "../../assets/profile.png"
 import { useScrollAnimation } from "../../hooks/useScrollAnimation"

@@ -1,9 +1,11 @@
+// Fixed navigation bar with active section highlighting and smooth scroll
 import React, { useState, useEffect } from "react"
 import logo from "../../assets/logo.png"
 
 const Navbar = () => {
   const [activeSection, setActiveSection] = useState('home')
 
+  // Track which section is currently in view
   useEffect(() => {
     const handleScroll = () => {
       const sections = ['home', 'about', 'resume', 'work', 'contact']
@@ -29,6 +31,7 @@ const Navbar = () => {
     return () => window.removeEventListener('scroll', handleScroll)
   }, [])
 
+  // Smooth scroll to section using Lenis
   const scrollToSection = (sectionId) => {
     const element = document.getElementById(sectionId)
     if (element && window.lenis) {
@@ -86,7 +89,7 @@ const Navbar = () => {
 
       </button>
 
-      {/* Navigation Links */}
+      {/* Navigation Links with active highlighting */}
       <div className="hidden md:flex items-center space-x-10 text-sm tracking-widest text-gray-400">
 
         {navItems.map((item) => (
@@ -98,6 +101,7 @@ const Navbar = () => {
             }`}
           >
             {item.label}
+            {/* Active indicator underline */}
             {activeSection === item.id && (
               <span className="absolute -bottom-2 left-0 right-0 h-0.5 bg-cyan-400 rounded-full"></span>
             )}

@@ -1,3 +1,4 @@
+// Section 2 container - Combines all content sections (About, Resume, Projects, Contact)
 import React from 'react'
 import Resume from './resume'
 import About from './About'
