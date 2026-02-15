@@ -1,4 +1,4 @@
-// Hero section profile photo - Circular image with glow effect and fade-in animation
+// Hero section profile photo - Circular image with glow effect (RESPONSIVE - Hidden on mobile)
 import React from "react"
 import profile from "../../assets/profile.png"
 import { useScrollAnimation } from "../../hooks/useScrollAnimation"
@@ -9,7 +9,7 @@ const PhotoRight = () => {
   return (
     <div 
       ref={ref}
-      className={`absolute right-20 top-1/2 -translate-y-1/2 z-10 transition-all duration-1000 ${
+      className={`hidden md:block absolute right-8 lg:right-20 top-1/2 -translate-y-1/2 z-10 transition-all duration-1000 ${
         isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-20'
       }`}
     >
@@ -20,8 +20,8 @@ const PhotoRight = () => {
         blur-3xl opacity-30">
       </div>
 
-      {/* Circular Image */}
-      <div className="relative w-[380px] h-[380px] 
+      {/* Circular Image - Responsive sizes */}
+      <div className="relative w-[280px] h-[280px] md:w-[320px] md:h-[320px] lg:w-[380px] lg:h-[380px]
         rounded-full overflow-hidden 
         border border-white/20 
         shadow-2xl">

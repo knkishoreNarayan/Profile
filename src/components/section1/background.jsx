@@ -1,8 +1,281 @@
-// Animated futuristic background - Neural network particles, gradient orbs, data streams, and floating code
-import React, { useEffect, useRef } from "react"
+// Animated futuristic background - Neural network particles, gradient orbs, data streams, and floating code (OPTIMIZED FOR MOBILE)
+import React, { useEffect, useRef, useState } from "react"
 import { gsap } from "gsap"
 
 const Background = () => {
+  const containerRef = useRef(null)
+  const canvasRef = useRef(null)
+  const [isMobile, setIsMobile] = useState(false)
+
+  useEffect(() => {
+    // Detect mobile device
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768)
+    }
+    
+    checkMobile()
+    window.addEventListener('resize', checkMobile)
+
+    const canvas = canvasRef.current
+    const ctx = canvas.getContext('2d')
+    canvas.width = window.innerWidth
+    canvas.height = window.innerHeight
+
+    // Reduce particle count on mobile for better performance
+    const particleCount = isMobile ? 30 : 120
+
+    // Particle system for neural network effect
+    class Particle {
+      constructor() {
+        this.x = Math.random() * canvas.width
+        this.y = Math.random() * canvas.height
+        this.vx = (Math.random() - 0.5) * 0.5
+        this.vy = (Math.random() - 0.5) * 0.5
+        this.radius = Math.random() * 2 + 1
+        this.opacity = Math.random() * 0.5 + 0.3
+      }
+
+      update() {
+        this.x += this.vx
+        this.y += this.vy
+
+        if (this.x < 0 || this.x > canvas.width) this.vx *= -1
+        if (this.y < 0 || this.y > canvas.height) this.vy *= -1
+      }
+
+      draw() {
+        ctx.beginPath()
+        ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2)
+        ctx.fillStyle = `rgba(100, 200, 255, ${this.opacity})`
+        ctx.fill()
+        
+        // Skip glow effect on mobile for performance
+        if (!isMobile) {
+          ctx.shadowBlur = 10
+          ctx.shadowColor = `rgba(100, 200, 255, ${this.opacity})`
+        }
+      }
+    }
+
+    // Create particles
+    const particles = []
+    for (let i = 0; i < particleCount; i++) {
+      particles.push(new Particle())
+    }
+
+    // Draw connections between nearby particles (reduced on mobile)
+    function drawConnections() {
+      const maxDistance = isMobile ? 100 : 150
+      const maxConnections = isMobile ? 50 : particles.length
+      
+      for (let i = 0; i < Math.min(particles.length, maxConnections); i++) {
+        for (let j = i + 1; j < Math.min(particles.length, maxConnections); j++) {
+          const dx = particles[i].x - particles[j].x
+          const dy = particles[i].y - particles[j].y
+          const distance = Math.sqrt(dx * dx + dy * dy)
+
+          if (distance < maxDistance) {
+            ctx.beginPath()
+            ctx.strokeStyle = `rgba(100, 200, 255, ${0.2 * (1 - distance / maxDistance)})`
+            ctx.lineWidth = 1
+            ctx.moveTo(particles[i].x, particles[i].y)
+            ctx.lineTo(particles[j].x, particles[j].y)
+            ctx.stroke()
+          }
+        }
+      }
+    }
+
+    // Animation loop with performance optimization
+    let lastTime = 0
+    const fps = isMobile ? 30 : 60 // Lower FPS on mobile
+    const interval = 1000 / fps
+
+    function animate(currentTime) {
+      const deltaTime = currentTime - lastTime
+
+      if (deltaTime > interval) {
+        ctx.clearRect(0, 0, canvas.width, canvas.height)
+        
+        particles.forEach(particle => {
+          particle.update()
+          particle.draw()
+        })
+        
+        if (!isMobile) {
+          drawConnections() // Skip connections on mobile for better performance
+        }
+        
+        lastTime = currentTime
+      }
+      
+      requestAnimationFrame(animate)
+    }
+
+    animate(0)
+
+    // Resize handler
+    const handleResize = () => {
+      canvas.width = window.innerWidth
+      canvas.height = window.innerHeight
+    }
+    window.addEventListener('resize', handleResize)
+
+    // GSAP Animations for gradient orbs (simplified on mobile)
+    const orbs = containerRef.current.querySelectorAll('.orb')
+    
+    orbs.forEach((orb, index) => {
+      const duration = isMobile ? 15 + index * 2 : 8 + index * 2
+      const distance = isMobile ? 50 : 150
+      
+      gsap.to(orb, {
+        x: distance * (index % 2 === 0 ? 1 : -1),
+        y: distance * (index % 2 === 0 ? -1 : 1),
+        scale: isMobile ? 1 : 1.2,
+        duration: duration,
+        repeat: -1,
+        yoyo: true,
+        ease: "sine.inOut"
+      })
+    })
+
+    // Animate data streams (fewer on mobile)
+    const streams = containerRef.current.querySelectorAll('.data-stream')
+    streams.forEach((stream, index) => {
+      if (isMobile && index > 2) return // Only show 3 streams on mobile
+      
+      gsap.to(stream, {
+        y: '100vh',
+        duration: 12 + index * 1.5,
+        repeat: -1,
+        ease: "none",
+        delay: index * 1.5
+      })
+    })
+
+    // Skip code elements and rings on mobile
+    if (!isMobile) {
+      const codeElements = containerRef.current.querySelectorAll('.code-float')
+      codeElements.forEach((element, index) => {
+        gsap.to(element, {
+          y: -50,
+          x: Math.random() * 40 - 20,
+          rotation: Math.random() * 10 - 5,
+          duration: 8 + index * 2,
+          repeat: -1,
+          yoyo: true,
+          ease: "sine.inOut",
+          delay: index * 0.5
+        })
+      })
+
+      const rings = containerRef.current.querySelectorAll('.pulse-ring')
+      rings.forEach((ring, index) => {
+        gsap.to(ring, {
+          scale: 1.5,
+          opacity: 0,
+          duration: 3,
+          repeat: -1,
+          ease: "power1.out",
+          delay: index * 1
+        })
+      })
+    }
+
+    return () => {
+      window.removeEventListener('resize', handleResize)
+      window.removeEventListener('resize', checkMobile)
+    }
+  }, [isMobile])
+
+  const codeSnippets = [
+    '{ }', '</>', '<div>', 'const', 'function', 'import', 'export', 'async', 'await', 'return'
+  ]
+
+  return (
+    <div ref={containerRef} className="fixed inset-0 -z-50 overflow-hidden">
+      
+      {/* Base gradient */}
+      <div className="absolute inset-0 bg-gradient-to-br from-[#0a0e27] via-[#0f1419] to-[#050810]"></div>
+
+      {/* Canvas for neural network */}
+      <canvas ref={canvasRef} className="absolute inset-0 opacity-70"></canvas>
+
+      {/* Animated gradient orbs - Smaller and fewer on mobile */}
+      <div className="orb absolute w-[400px] h-[400px] md:w-[700px] md:h-[700px] rounded-full blur-3xl opacity-20 md:opacity-30 -left-40 md:-left-60 top-20"
+        style={{ background: 'radial-gradient(circle, rgba(0, 150, 255, 0.6), rgba(100, 50, 255, 0.3))' }}>
+      </div>
+
+      <div className="orb absolute w-[350px] h-[350px] md:w-[600px] md:h-[600px] rounded-full blur-3xl opacity-15 md:opacity-25 -right-20 md:-right-40 bottom-10"
+        style={{ background: 'radial-gradient(circle, rgba(0, 255, 200, 0.5), rgba(0, 150, 255, 0.3))' }}>
+      </div>
+
+      {/* Hide extra orbs on mobile */}
+      <div className="orb hidden md:block absolute w-[550px] h-[550px] rounded-full blur-3xl opacity-20 left-1/3 top-1/2"
+        style={{ background: 'radial-gradient(circle, rgba(150, 50, 255, 0.5), rgba(255, 0, 150, 0.2))' }}>
+      </div>
+
+      <div className="orb hidden md:block absolute w-[500px] h-[500px] rounded-full blur-3xl opacity-25 right-1/4 top-1/4"
+        style={{ background: 'radial-gradient(circle, rgba(0, 200, 255, 0.5), rgba(100, 255, 200, 0.3))' }}>
+      </div>
+
+      {/* Data streams - Fewer on mobile */}
+      <div className="data-stream absolute left-[10%] -top-20 w-[2px] h-40 bg-gradient-to-b from-transparent via-cyan-400 to-transparent opacity-50"></div>
+      <div className="data-stream absolute left-[45%] -top-24 w-[2px] h-36 bg-gradient-to-b from-transparent via-purple-400 to-transparent opacity-45"></div>
+      <div className="data-stream absolute left-[80%] -top-36 w-[2px] h-38 bg-gradient-to-b from-transparent via-cyan-400 to-transparent opacity-40"></div>
+      
+      {/* Extra streams only on desktop */}
+      <div className="data-stream hidden md:block absolute left-[25%] -top-32 w-[2px] h-32 bg-gradient-to-b from-transparent via-blue-400 to-transparent opacity-40"></div>
+      <div className="data-stream hidden md:block absolute left-[65%] -top-28 w-[2px] h-44 bg-gradient-to-b from-transparent via-teal-400 to-transparent opacity-50"></div>
+      <div className="data-stream hidden md:block absolute left-[90%] -top-20 w-[2px] h-40 bg-gradient-to-b from-transparent via-blue-400 to-transparent opacity-45"></div>
+
+      {/* Floating code snippets - Desktop only */}
+      {codeSnippets.map((code, index) => (
+        <div
+          key={index}
+          className="code-float hidden md:block absolute text-cyan-400/30 font-mono text-sm pointer-events-none"
+          style={{
+            left: `${10 + index * 9}%`,
+            top: `${20 + (index % 3) * 25}%`,
+          }}
+        >
+          {code}
+        </div>
+      ))}
+
+      {/* Pulsing rings - Desktop only */}
+      <div className="pulse-ring hidden md:block absolute top-1/4 left-1/4 w-32 h-32 border-2 border-cyan-400/30 rounded-full"></div>
+      <div className="pulse-ring hidden md:block absolute top-2/3 right-1/3 w-40 h-40 border-2 border-purple-400/30 rounded-full"></div>
+      <div className="pulse-ring hidden md:block absolute bottom-1/4 left-2/3 w-36 h-36 border-2 border-blue-400/30 rounded-full"></div>
+
+      {/* Glowing grid - Lighter on mobile */}
+      <div className="absolute inset-0 opacity-[0.04] md:opacity-[0.08]"
+        style={{
+          backgroundImage: `
+            linear-gradient(rgba(0, 200, 255, 0.8) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(0, 200, 255, 0.8) 1px, transparent 1px)
+          `,
+          backgroundSize: '80px 80px'
+        }}>
+      </div>
+
+      {/* Radial glow spots */}
+      <div className="absolute top-0 left-1/4 w-64 h-64 md:w-96 md:h-96 bg-blue-500/10 md:bg-blue-500/20 rounded-full blur-3xl animate-pulse"></div>
+      <div className="absolute bottom-0 right-1/4 w-64 h-64 md:w-96 md:h-96 bg-purple-500/10 md:bg-purple-500/20 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }}></div>
+      <div className="hidden md:block absolute top-1/2 left-1/2 w-96 h-96 bg-cyan-500/20 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '2s' }}></div>
+
+      {/* Diagonal light beams - Desktop only */}
+      <div className="hidden md:block absolute top-0 left-1/4 w-[2px] h-full bg-gradient-to-b from-cyan-400/20 via-transparent to-transparent rotate-12 origin-top"></div>
+      <div className="hidden md:block absolute top-0 right-1/3 w-[2px] h-full bg-gradient-to-b from-purple-400/20 via-transparent to-transparent -rotate-12 origin-top"></div>
+
+      {/* Overlay gradient for depth */}
+      <div className="absolute inset-0 bg-gradient-to-t from-[#050810]/80 via-transparent to-transparent"></div>
+
+    </div>
+  )
+}
+
+export default Background
   const containerRef = useRef(null)
   const canvasRef = useRef(null)
 

@@ -1,4 +1,4 @@
-// Projects section - Grid display of portfolio projects with tech stack tags
+// Projects section - Grid display of portfolio projects with tech stack tags (RESPONSIVE)
 import React from "react"
 import { useScrollAnimation } from "../../hooks/useScrollAnimation"
 
@@ -43,32 +43,32 @@ const Projects = () => {
     <section 
       ref={ref}
       id="work" 
-      className={`min-h-screen px-20 py-24 relative z-10 transition-all duration-1000 ${
+      className={`min-h-screen px-6 sm:px-10 md:px-16 lg:px-20 py-16 md:py-24 relative z-10 transition-all duration-1000 ${
         isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-20'
       }`}
     >
 
       {/* Heading */}
-      <div className="text-center mb-16">
-        <h2 className="text-5xl font-bold text-white tracking-wider">
+      <div className="text-center mb-12 md:mb-16">
+        <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white tracking-wider">
           MY <span className="text-purple-400">WORKS</span>
         </h2>
       </div>
 
-      {/* Project Grid */}
-      <div className="grid grid-cols-3 gap-8">
+      {/* Project Grid - 1 column mobile, 2 tablet, 3 desktop */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
 
         {projectData.map((project, index) => (
           <div
             key={index}
             className="bg-[#14141c] border border-white/10 
-            rounded-xl p-6 hover:border-purple-500 
+            rounded-xl p-5 md:p-6 hover:border-purple-500 
             hover:shadow-lg hover:shadow-purple-600/20
             transition duration-300 flex flex-col justify-between"
           >
 
             <div>
-              <h3 className="text-white text-lg font-semibold mb-3">
+              <h3 className="text-white text-base md:text-lg font-semibold mb-3">
                 {project.title}
               </h3>
 
@@ -94,7 +94,7 @@ const Projects = () => {
               href={project.link}
               target="_blank"
               rel="noopener noreferrer"
-              className="text-purple-400 hover:text-purple-300 font-medium"
+              className="text-purple-400 hover:text-purple-300 font-medium text-sm md:text-base"
             >
               View on GitHub →
             </a>
