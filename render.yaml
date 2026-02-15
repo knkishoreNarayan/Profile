@@ -1,13 +1,18 @@
 services:
   - type: web
     name: kn-kishore-portfolio
-    env: docker
-    # Use pre-built image from Docker Hub
-    image:
-      url: docker.io/kishorenarayan11/portfolio:latest
-    plan: free
-    region: oregon
-    healthCheckPath: /
-    envVars:
-      - key: NODE_ENV
-        value: production
+    env: static
+    buildCommand: npm install && npm run build
+    staticPublishPath: ./dist
+    pullRequestPreviewsEnabled: true
+    headers:
+      - path: /*
+        name: Cache-Control
+        value: public, max-age=31536000, immutable
+      - path: /index.html
+        name: Cache-Control
+        value: no-cache, no-store, must-revalidate
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html
