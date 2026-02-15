@@ -2,10 +2,11 @@ services:
   - type: web
     name: kn-kishore-portfolio
     env: docker
-    dockerfilePath: ./Dockerfile
+    # Use pre-built image from Docker Hub
+    image:
+      url: docker.io/kishorenarayan11/portfolio:latest
     plan: free
     region: oregon
-    branch: main
     healthCheckPath: /
     envVars:
       - key: NODE_ENV
